@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack - Fitness Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .mobile-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .user-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .user-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3498db;
+            font-size: 20px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .stat-card p {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .progress-ring {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+        
+        .ring-bg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #f1f1f1;
+        }
+        
+        .ring-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            clip: rect(0, 50px, 100px, 0);
+            background: #3498db;
+            transform: rotate(108deg); /* 30% progress */
+        }
+        
+        .ring-content {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ring-content h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .ring-content p {
+            font-size: 12px;
+        }
+        
+        .section-title {
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title a {
+            font-size: 14px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .activity-list {
+            padding: 0 20px;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #e3f2fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #3498db;
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-details h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .activity-details p {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .activity-value {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .workout-plan {
+            margin: 20px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+        }
+        
+        .workout-plan h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .workout-plan p {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .workout-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .workout-stat {
+            text-align: center;
+        }
+        
+        .workout-stat h4 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .workout-stat p {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+        
+        .start-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: #3498db;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        .tab-item.active {
+            color: #3498db;
+        }
+        
+        .tab-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .main-content {
+            padding-bottom: 70px; /* Space for tab bar */
+        }
+        
+        .chart-container {
+            padding: 20px;
+        }
+        
+        .chart {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .chart h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .chart-placeholder {
+            height: 150px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+        
+        .water-intake {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .water-cup {
+            width: 40px;
+            height: 40px;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3498db;
+        }
+        
+        .water-cup.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .sleep-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .sleep-stat {
+            text-align: center;
+        }
+        
+        .sleep-stat h4 {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .sleep-stat p {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 400px) {
+            .mobile-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <header>
+            <div class="user-info">
+                <h1>Hello, Sarah!</h1>
+                <p>Ready to reach your goals today?</p>
+            </div>
+            <div class="user-img">
+                <i class="fas fa-user"></i>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>7,892</h3>
+                    <p>Steps</p>
+                </div>
+                <div class="stat-card">
+                    <h3>420</h3>
+                    <p>Calories</p>
+                </div>
+                <div class="stat-card">
+                    <h3>5.2km</h3>
+                    <p>Distance</p>
+                </div>
+            </div>
+            
+            <div class="progress-ring">
+                <div class="ring-bg"></div>
+                <div class="ring-progress"></div>
+                <div class="ring-content">
+                    <h3>30%</h3>
+                    <p>Complete</p>
+                </div>
+            </div>
+            
+            <div class="section-title">
+                <h2>Today's Activity</h2>
+                <a href="#">View All</a>
+            </div>
+            
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-walking"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Morning Walk</h4>
+                        <p>30 min • 8:00 AM</p>
+                    </div>
+                    <div class="activity-value">120 cal</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <i class="fas fa-biking"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Cycling</h4>
+                        <p>45 min • 12:30 PM</p>
+                    </div>
+                    <div class="activity-value">280 cal</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: #ffebee; color: #f44336;">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Strength Training</h4>
+                        <p>60 min • 6:00 PM</p>
+                    </div>
+                    <div class="activity-value">350 cal</div>
+                </div>
+            </div>
+            
+            <div class="section-title">
+                <h2>Workout Plan</h2>
+                <a href="#">Edit</a>
+            </div>
+            
+            <div class="workout-plan">
+                <h3>Upper Body Strength</h3>
+                <p>Complete 3 sets of 12 reps for each exercise</p>
+                
+                <div class="workout-stats">
+                    <div class="workout-stat">
+                        <h4>5</h4>
+                        <p>Exercises</p>
+                    </div>
+                    <div class="workout-stat">
+                        <h4>45</h4>
+                        <p>Minutes</p>
+                    </div>
+                    <div class="workout-stat">
+                        <h4>420</h4>
+                        <p>Calories</p>
+                    </div>
+                </div>
+                
+                <button class="start-button">Start Workout</button>
+            </div>
+            
+            <div class="section-title">
+                <h2>Weekly Progress</h2>
+                <a href="#">Details</a>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart">
+                    <h3>Steps This Week</h3>
+                    <div class="chart-placeholder">
+                        <p>Step chart visualization</p>
+                    </div>
+                </div>
+                
+                <div class="chart">
+                    <h3>Water Intake</h3>
+                    <div class="water-intake">
+                        <div class="water-cup active">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="water-cup active">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="water-cup active">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="water-cup">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="water-cup">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="water-cup">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="water-cup">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart">
+                    <h3>Sleep Quality</h3>
+                    <div class="chart-placeholder">
+                        <p>Sleep chart visualization</p>
+                    </div>
+                    <div class="sleep-stats">
+                        <div class="sleep-stat">
+                            <h4>7h 30m</h4>
+                            <p>Average</p>
+                        </div>
+                        <div class="sleep-stat">
+                            <h4>85%</h4>
+                            <p>Quality</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-bar">
+            <a href="#" class="tab-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="tab-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Stats</span>
+            </a>
+            <a href="#" class="tab-item">
+                <i class="fas fa-dumbbell"></i>
+                <span>Workout</span>
+            </a>
+            <a href="#" class="tab-item">
+                <i class="fas fa-utensils"></i>
+                <span>Nutrition</span>
+            </a>
+            <a href="#" class="tab-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple progress ring animation
+            const progressRing = document.querySelector('.ring-progress');
+            let progress = 30;
+            let rotation = (progress / 100) * 360;
+            progressRing.style.transform = `rotate(${rotation}deg)`;
+            
+            // Water intake tracking
+            const waterCups = document.querySelectorAll('.water-cup');
+            waterCups.forEach((cup, index) => {
+                cup.addEventListener('click', () => {
+                    if (index === 0 || waterCups[index - 1].classList.contains('active')) {
+                        cup.classList.toggle('active');
+                    }
+                });
+            });
+            
+            // Start workout button
+            const startButton = document.querySelector('.start-button');
+            startButton.addEventListener('click', () => {
+                alert('Workout started! In a real app, this would begin tracking your workout.');
+                startButton.textContent = 'Workout in Progress...';
+                startButton.style.background = '#4caf50';
+                startButton.style.color = 'white';
+            });
+            
+            // Tab navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // In a real app, this would load different content
+                    alert(`Loading ${tab.querySelector('span').textContent} section...`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
